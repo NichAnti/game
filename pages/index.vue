@@ -1,6 +1,6 @@
 <template>
   <div class="space">
-    <Rocket class="rocket" />
+    <Rocket :style="{ 'margin-bottom': rocketDistance }" class="rocket" />
   </div>
 </template>
 
@@ -10,13 +10,43 @@ import Rocket from '~/assets/svg/rocket.svg?inline'
 export default {
   components: {
     Rocket
+  },
+
+  data() {
+    return {
+      rocketDistance: 1,
+      pushParam: 1.15,
+      pullParam: 0.99
+    }
+  },
+
+  mounted() {
+    document.addEventListener('keydown', this.pushRocket)
+    setInterval(this.pullRocket, 10)
+  },
+
+  destroyed() {
+    document.addEventListener('keydown', this.pushRocket)
+  },
+
+  methods: {
+    pushRocket() {
+      if (this.rocketDistance * this.pushParam < window.innerHeight) {
+        this.rocketDistance *= this.pushParam
+      }
+    },
+    pullRocket() {
+      if (this.rocketDistance >= 1) {
+        this.rocketDistance *= this.pullParam
+      }
+    }
   }
 }
 </script>
 
 <style>
 .space {
-  @apply bg-black min-h-screen flex justify-center items-end pb-10;
+  @apply bg-black h-screen flex justify-center items-end pb-10;
 }
 
 .rocket {
